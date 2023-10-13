@@ -6,8 +6,16 @@ deces <-
     opts = list("region" = "")
   )
 
+library(data.table)
+library(stringr)
 
-s3/projet-ssplab/appariements
-aws.s3::get_bucket("s3/projet-ssplab", region = "")
-aws.s3::get_bucket("projet-ssplab")
-arrow::read_parquet()
+setDT(deces)
+
+variable_en_maj <- c("nom_etat_civil", "prenoms_etat_civil")
+deces[, (variable_en_maj) :=lapply(.SD, str_to_lower), .SDcols = variable_en_maj]
+
+
+
+deces_sample <- deces[1:1000,]
+
+
