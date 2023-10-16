@@ -1,29 +1,49 @@
-perturb <- function(vecteur, taille_pattern, pos.pattern){
+#' add_pattern
+#' 
+#' Ajoute un pattern à une chaine de charactères.
+#' Taille et position du pattern à choisir.
+#'
+#' @param vecteur 
+#' @param taille_pattern 
+#' @param pos.pattern 
+#'
+#' @return vecteur character perturbé
+#'
+#' @examples
+#' add_pattern( c("aaa", "bbbbb", "ccccccc"), 2, 10)
+#' 
+add_pattern <- function(vecteur, taille_pattern, pos.pattern){
+  # taille_pattern <- 3
+  # vecteur <- c("aaa", "bbbbb", "ccccccc")
+  
   n <- length(vecteur)
   
-  all_patterns <- expand.grid(letters, letters, letters) |> apply(1, paste,  collapse = "")
+  all_patterns <- vector()
+  
+  for (i in 1:taille_pattern) {
+    if( i == 1){
+      all_patterns <- letters
+    }else{
+      all_patterns <- expand.grid(all_patterns, letters) |> apply(1, paste,  collapse = "")
+    }
+  }
+
   vecteur_patterns <- sample(all_patterns, n, replace = TRUE) 
   
-  vecteur_perturbe <- str_sub(vecteur, -1, pos.pattern) |> 
-    str_c(vecteur_patterns) |> 
-    str_c(str_sub(vecteur, pos.pattern ))
+  
+  if(pos.pattern == 1){
+    vecteur_perturbe <- str_c(vecteur_patterns, vecteur) 
+  }else{
+    vecteur_perturbe <- str_sub(vecteur, 1, pos.pattern-1) |> 
+      str_c(vecteur_patterns) |> 
+      str_c(str_sub(vecteur, pos.pattern ))
+  }
+  
   
   return(vecteur_perturbe)
 }
 
-perturb( c("aaa", "bbbbb", "ccccccc"), 2, 3)
 
-deb <- Sys.time()
 
-base <- deces[1:100]
-n <- nrow(base)
-part_a_perturber <- 0.50
- 
-lignes_a_perturber <- sample.int(n, floor(n * part_a_perturber), replace = FALSE)
-base[lignes_a_perturber, new := perturb(nom_etat_civil, taille_pattern = 3, pos.pattern = 2)][
-  !is.na(new), nom_etat_civil := new][
-    , new := NULL
-  ]
 
-fin <- Sys.time()
-fin - deb
+
